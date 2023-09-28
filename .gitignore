@@ -1,0 +1,4 @@
+venvPostly/
+.env
+**/__pycache__/
+migrations/
