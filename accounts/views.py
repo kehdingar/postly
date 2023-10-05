@@ -27,6 +27,6 @@ class ObtainAuthTokenWithCookie(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            token = Token.objects.get(key=response.data['Token'])
+            token = Token.objects.get(key=response.data['token'])
             response.set_cookie('auth_token', token.key, httponly=True)
         return response
