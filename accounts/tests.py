@@ -31,3 +31,14 @@ class UserTests(APITestCase):
         self.assertEqual(User.objects.count(), 2)
         self.assertEqual(User.objects.get(username='testuser2').username, 'testuser2')
 
+    def test_obtain_token(self):
+        url = reverse('api_token_auth')
+        data = {
+            'username': 'testuser',
+            'password': 'testpass123',
+        }
+        response = self.client.post(url, data, format='json')
+
+        # Assuming you are using Django Rest Framework's default token authentication
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('token', response.data)
