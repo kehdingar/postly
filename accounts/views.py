@@ -30,3 +30,11 @@ class ObtainAuthTokenWithCookie(ObtainAuthToken):
             token = Token.objects.get(key=response.data['token'])
             response.set_cookie('auth_token', token.key, httponly=True)
         return response
+
+class UserRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user    
