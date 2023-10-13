@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
+from django.core import mail
+
 
 User = get_user_model()
 
@@ -10,8 +12,8 @@ class UserTests(APITestCase):
     def setUp(self):
         # Create a user for testing
         self.user = User.objects.create_user(
-            username='testuser',
-            email='testuser@example.com',
+            username='kehdinga',
+            email='kehdingar@gmail.com',
             password='testpass123',
             first_name='Test',
             last_name='User'
@@ -39,6 +41,16 @@ class UserTests(APITestCase):
         }
         response = self.client.post(url, data, format='json')
 
-        # Assuming you are using Django Rest Framework's default token authentication
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('token', response.data)
+
+    def test_password_reset(self):
+        # Request a password reset token for the test user
+        url = reverse('password_reset:reset-password-request')
+        data = {'email': self.user.email}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Check that the password reset email was sent to the test user's email address
+        self.assertEqual(len(mail.outbox), 1)
+        message = mail.outbox[0]
+        self.assertIn(self.user.email, message.to)        
