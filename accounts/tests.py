@@ -54,3 +54,13 @@ class UserTests(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
         message = mail.outbox[0]
         self.assertIn(self.user.email, message.to)        
+
+    def test_update_user_profile(self):
+        url = reverse('profile')
+        self.client.force_authenticate(user=self.user)
+        data = {'first_name': 'New', 'last_name': 'Name'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], 'New')
+        self.assertEqual(response.data['last_name'], 'Name')
+    
