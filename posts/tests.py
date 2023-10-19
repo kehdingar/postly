@@ -36,3 +36,10 @@ class PostTests(TestCase):
         serializer = PostSerializer(self.post)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)        
+
+    def test_update_post(self):
+        url = f'/posts/{self.post.id}/'
+        data = {'title': 'Updated Post', 'content': 'This post has been updated.'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Post.objects.get(id=self.post.id).title, 'Updated Post')        
