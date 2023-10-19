@@ -21,3 +21,11 @@ class PostTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Post.objects.count(), 2)
         self.assertEqual(Post.objects.get(id=2).title, 'New Post')
+
+    def test_get_post_list(self):
+        url = '/posts/'
+        response = self.client.get(url)
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
