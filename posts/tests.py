@@ -43,3 +43,9 @@ class PostTests(TestCase):
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Post.objects.get(id=self.post.id).title, 'Updated Post')        
+
+    def test_delete_post(self):
+        url = f'/posts/{self.post.id}/'
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Post.objects.count(), 0)    
