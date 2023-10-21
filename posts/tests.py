@@ -49,3 +49,18 @@ class PostTests(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Post.objects.count(), 0)    
+
+
+class LikeTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass123')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.post = Post.objects.create(title='Test Post', content='This is a test post.', author=self.user)
+
+    def test_like_post(self):
+        url = f'/posts/{self.post.id}/like/'
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Like.objects.count(), 1)
+        self.assertEqual(Like.objects.get().user, self.user)
