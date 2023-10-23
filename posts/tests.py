@@ -64,3 +64,10 @@ class LikeTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Like.objects.count(), 1)
         self.assertEqual(Like.objects.get().user, self.user)
+
+    def test_unlike_post(self):
+        like = Like.objects.create(post=self.post, user=self.user)
+        url = f'/posts/{self.post.id}/like/'
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Like.objects.count(), 0)
