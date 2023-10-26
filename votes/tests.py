@@ -41,3 +41,10 @@ class VoteTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Vote.objects.count(), 2)
         self.assertEqual(Vote.objects.get(id=vote_id).value, -1)
+
+    def test_create_duplicate_vote(self):
+        url = '/votes/vote/'
+        data = {'user':self.user.pk,'post': self.post.id, 'value': 1}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Vote.objects.count(), 1)        
