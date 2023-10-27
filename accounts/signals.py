@@ -4,7 +4,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from django_rest_passwordreset.signals import reset_password_token_created
+from dotenv import load_dotenv,find_dotenv
+import os
 
+load_dotenv()
+dotenv_path = find_dotenv(raise_error_if_not_found=True, usecwd=True)
+load_dotenv(dotenv_path)
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
@@ -38,7 +43,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # message:
         email_plaintext_message,
         # from:
-        "kehdingar@gmail.com",
+        os.getenv("EMAIL_HOST_USER"),
         # to:
         [reset_password_token.user.email]
     )
